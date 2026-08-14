@@ -35,7 +35,7 @@ export function Logo({ compact }: { compact?: boolean }) {
   )
 }
 
-function LangToggle() {
+export function LangToggle() {
   const { lang, setLang } = useI18n()
   return (
     <div className="flex items-center rounded-lg border border-ink-200 bg-white p-0.5">

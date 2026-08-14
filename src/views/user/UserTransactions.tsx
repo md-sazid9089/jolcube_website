@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/layout/AppShell'
 import { useI18n } from '@/i18n/I18nProvider'
 import { useApp } from '@/store/AppStore'
 import { txnsOfUser, userById } from '@/store/selectors'
+import { iso } from '@/lib/date'
 import type { Transaction } from '@/data/types'
 
 export function TransactionRow({ tx }: { tx: Transaction }) {
@@ -53,7 +54,7 @@ export function UserTransactions() {
   const groups = useMemo(() => {
     const map = new Map<string, Transaction[]>()
     for (const tx of txns) {
-      const d = tx.ts.slice(0, 10)
+      const d = iso(new Date(tx.ts))
       const list = map.get(d) ?? []
       list.push(tx)
       map.set(d, list)

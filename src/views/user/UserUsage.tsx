@@ -3,7 +3,7 @@ import { Droplet } from 'lucide-react'
 import { BarChart } from '@/components/ui/charts'
 import { Card, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { PageHeader } from '@/components/layout/AppShell'
-import { dayOffset } from '@/lib/date'
+import { dayOffset, iso } from '@/lib/date'
 import { useI18n } from '@/i18n/I18nProvider'
 import { useApp } from '@/store/AppStore'
 import { cubeById, txnsOfUser, userById } from '@/store/selectors'
@@ -20,7 +20,7 @@ export function UserUsage() {
     for (let i = 13; i >= 0; i--) map.set(dayOffset(-i), 0)
     for (const tx of txns) {
       if (tx.type !== 'dispense') continue
-      const d = tx.ts.slice(0, 10)
+      const d = iso(new Date(tx.ts))
       if (map.has(d)) map.set(d, (map.get(d) ?? 0) + tx.litres)
     }
     return [...map.entries()].map(([d, v]) => ({ label: date(d, { day: 'numeric', month: 'short' }), value: v }))
@@ -29,7 +29,7 @@ export function UserUsage() {
   const total14 = days.reduce((a, d) => a + d.value, 0)
   const avg = total14 / 14
   const monthSpend = txns
-    .filter((tx) => tx.type === 'topup' && tx.ts.slice(0, 7) === new Date().toISOString().slice(0, 7))
+    .filter((tx) => tx.type === 'topup' && iso(new Date(tx.ts)).slice(0, 7) === iso(new Date()).slice(0, 7))
     .reduce((a, tx) => a + tx.amountBdt, 0)
 
   return (
